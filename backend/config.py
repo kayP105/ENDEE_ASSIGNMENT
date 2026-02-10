@@ -1,0 +1,4 @@
+INDEX_NAME = "knowledge_base"
+EMBEDDING_DIM = 384
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+TOP_K = 3
