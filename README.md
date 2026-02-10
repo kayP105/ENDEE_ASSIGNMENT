@@ -1,141 +1,228 @@
 Endee Knowledge assistant
 Topic: Semantic Search and retreival Augemnted Generation(RAG) using Endee Vector Datatbase
--------------------------------------------------------------------------------------------------------------------------
-Using Endee (high performance vector database) as the central component ,the system supports two very close but distinct capabilities -
+This project demonstrates how to build a retrieval-first AI system using Endee, a high-performance vector database, as the core semantic engine.
 
-   *Semantic Search-retrieving the most relevant document passages using vector similarity
-   
-   *Retrieval-Augmented Generation (RAG) – generating grounded answers by combining retrieval with a language model
-   
-The language model is used only after Endee has selected the most relevant information.
-_________________________________________________________________________________________________________________________
-Endee
-------
-Endee is a high-performance open-source vector database designed specifically for semantic similarity search at scale.
+The system supports two closely related but conceptually distinct capabilities:
 
-Unlike traditional databases that store and query structured data (rows, columns, exact matches), Endee is optimized to store high-dimensional vectors and efficiently retrieve the most semantically similar vectors using approximate nearest-neighbor (ANN) search.
+Semantic Search – retrieving the most relevant document passages using vector similarity
 
-In modern AI systems, Endee serves as the semantic memory layer — enabling applications such as:
+Retrieval-Augmented Generation (RAG) – generating grounded answers by combining retrieval with a language model
 
-*semantic search
+A key design principle of this project is that the language model is only used after Endee has selected the most relevant information.
+Endee is responsible for what knowledge is relevant; the LLM is responsible only for explaining that knowledge.
 
-*document retrieval
+🧠 What is Endee?
 
-*recommendation systems
+Endee is a high-performance, open-source vector database designed specifically for semantic similarity search at scale.
 
-*Retrieval-Augmented Generation (RAG)
+Unlike traditional databases that operate on structured data (rows, columns, exact matches), Endee is optimized to:
 
-*agentic AI workflows
+store high-dimensional vector embeddings
 
-What is a Vector Database?
+perform approximate nearest-neighbor (ANN) search
 
-A vector database is a specialized database built to store and query vector embeddings — numerical representations of data such as text, images, audio, or code.
+retrieve semantically similar data efficiently and reliably
 
-How Endee Works Internally (High Level)
+In modern AI systems, Endee acts as the semantic memory layer, enabling applications such as:
 
-Data (text, documents, etc.) is converted into embeddings using an embedding model
+Semantic Search
 
-These embeddings are stored in Endee’s vector index
+Document Retrieval
+
+Recommendation Systems
+
+Retrieval-Augmented Generation (RAG)
+
+Agentic AI workflows
+
+In this project, Endee is the single source of semantic truth.
+
+📐 What is a Vector Database?
+
+A vector database is a specialized database built to store and query vector embeddings — numerical representations of unstructured data such as:
+
+text
+
+documents
+
+images
+
+audio
+
+code
+
+Embedding models convert data into vectors such that:
+
+semantically similar content → vectors close together
+
+semantically different content → vectors far apart
+
+Vector databases answer questions like:
+
+“Which pieces of data are most similar in meaning to this query?”
+
+This capability is fundamental to modern AI systems like semantic search and RAG.
+
+🔍 How Endee Works (High-Level)
+
+Documents are converted into vector embeddings using an embedding model
+
+These embeddings are stored inside an Endee vector index
 
 When a query arrives:
 
 the query is embedded
 
-Endee finds the nearest vectors using efficient ANN algorithms
+Endee performs ANN-based similarity search
 
-Endee returns the most relevant results along with similarity scores and metadata
+Endee returns:
 
-This process enables fast, scalable semantic retrieval, even with large datasets.
+top-K most relevant results
 
-User Query                                                     User Question          
-   ↓                                                                 ↓ 
-Text Embedding Model                                           Text Embedding Model
-   ↓                                                                  ↓
-Query Vector                                                   Query Vector
-   ↓                                                                  ↓    
-Endee Vector Database                                            Endee Vector Database
-   ↓                                                               ↓
-Top-K Similar Vectors                                            Top-K Relevant Chunks
-   ↓                                                                   ↓
-Original Text + Metadata                                                Prompt Construction    
-                                                                           ↓
-                                                                 Local LLM (Ollama)
-                                                                         ↓
-                                                              Final Answer + Citations
+similarity scores
+
+associated metadata (source, page number, etc.)
+
+This enables fast, scalable, and explainable semantic retrieval, even for large document collections.
+
+🏗 System Architecture (High Level)
+
+The system is organized into clearly separated layers, each with a single responsibility.
+
+┌──────────────────────────┐
+│ User Interface           │
+│ (Streamlit)              │
+│ - Query input            │
+│ - Mode selection         │
+│ - Result display         │
+└─────────────┬────────────┘
+              ↓
+┌──────────────────────────┐
+│ Application Layer        │
+│ (Python Backend)         │
+│ - Orchestrates pipeline  │
+│ - Handles modes (Search/RAG)
+│ - Manages Endee client   │
+└─────────────┬────────────┘
+              ↓
+┌──────────────────────────┐
+│ Semantic Layer           │
+│ (Embedding Model)        │
+│ - Converts text to vectors
+│ - Ensures semantic meaning
+└─────────────┬────────────┘
+              ↓
+┌──────────────────────────┐
+│ Vector Database          │
+│ (Endee)                  │
+│ - Stores embeddings      │
+│ - Performs similarity search
+│ - Returns ranked results │
+└─────────────┬────────────┘
+              ↓
+┌──────────────────────────┐
+│ Generation Layer (RAG)   │
+│ (Local LLM – Ollama)     │
+│ - Uses retrieved context │
+│ - Generates grounded answers
+└──────────────────────────┘
+
+🔍 Semantic Search Architecture
+Purpose
+
+Retrieve relevant document passages without generation.
+
+Pipeline
+User Query
+  ↓
+Embedding Model
+  ↓
+Query Vector
+  ↓
+Endee Vector Database
+  ↓
+Top-K Similar Vectors
+  ↓
+Original Text + Metadata + Confidence
+
+Characteristics
+
+Retrieval-only (no LLM)
+
+Fast response time
+
+No hallucination
+
+Fully traceable to documents
+
+Endee is responsible for all relevance decisions.
+
+🧠 RAG (Retrieval-Augmented Generation) Architecture
+Purpose
+
+Generate a grounded explanation using retrieved content.
+
+Pipeline
+User Question
+  ↓
+Embedding Model
+  ↓
+Query Vector
+  ↓
+Endee Vector Database
+  ↓
+Top-K Relevant Chunks
+  ↓
+Prompt Construction
+  ↓
+Local LLM (Ollama)
+  ↓
+Final Answer + Citations + Confidence
+
+Key Constraint
+
+The language model only sees content retrieved by Endee.
+It never accesses raw documents directly.
+
+This ensures:
+
+grounded answers
+
+reduced hallucination
+
+explainability
+
+📄 Document Ingestion Pipeline
+
+Documents are processed before querying and stored semantically.
+
+PDF / TXT Document
+  ↓
+Text Extraction
+  ↓
+Page-Aware Chunking (with overlap)
+  ↓
+Deduplication
+  ↓
+Embedding Generation
+  ↓
+Endee Vector Index
 
 
-┌─────────────────────┐
+Each chunk is stored with metadata:
 
-│  User Interface     │
+source file
 
-│  (Streamlit)        │
+page number
 
-└─────────┬───────────┘
+original text
 
-          ↓
-          
-┌─────────────────────┐
+⚙️ Project Setup & Installation
+1️⃣ Start Endee (Vector Database)
 
-│  Application Layer  │
+Endee is run as a standalone service using Docker.
 
-│  (Python Backend)   │
-
-└─────────┬───────────┘
-
-          ↓
-          
-┌─────────────────────┐
-│  Semantic Layer     │
-│  (Embeddings)       │
-└─────────┬───────────┘
-          ↓
-┌─────────────────────┐
-│  Vector Database    │
-│  (Endee)            │
-└─────────────────────┘
-          ↓
-┌─────────────────────┐
-│  Generation Layer   │
-│  (Local LLM – RAG)  │
-└─────────────────────┘
-
-Why This Architecture Works Well
-1. Separation of Concerns
-
-Retrieval ≠ Generation
-
-Each component has one clear responsibility
-
-2. Endee-Centric Design
-
-Endee determines what knowledge is relevant
-
-LLM only explains retrieved knowledge
-
-3. Scalability
-
-Vector search scales independently
-
-LLM can be swapped without changing retrieval
-
-4. Explainability
-
-Every answer can be traced back to documents
-
-Page-level citations are preserved
-
-
-
-1.1 Using the Endee Repository via Docker
-
-The official Endee repository provides a Docker-based setup, which is the recommended way to run Endee locally.
-
-This project uses Endee as a standalone vector database service, without modifying its internal C++ code.
-
-1.2 Docker Compose Configuration
-
-A minimal docker-compose.yml is used to run Endee and persist vector data.
-
+docker-compose.yml
 services:
   endee:
     image: endeeio/endee-server:latest
@@ -152,19 +239,12 @@ volumes:
   endee-data:
 
 
-This setup:
+Start Endee:
 
-runs Endee on localhost:8080
-
-persists index data using Docker volumes
-
-runs without authentication for local development
-
-1.3 Start Endee
 docker-compose up -d
 
 
-Verify Endee is running:
+Verify:
 
 curl http://localhost:8080/api/v1/index/list
 
@@ -173,99 +253,60 @@ Expected output:
 
 {"indexes":[]}
 
-2️⃣ Installing the Endee Python SDK
-
-The application communicates with Endee using its official Python SDK.
-
+2️⃣ Install Endee Python SDK
 pip install endee
 
 
-This SDK provides:
+The SDK provides:
 
-index creation and management
+index management
 
-vector upsert and query operations
+vector upsert & query
 
-a clean abstraction over Endee’s REST API
+clean abstraction over Endee APIs
 
-3️⃣ Application Configuration (Endee Client)
+3️⃣ Configure Endee Client
 
-The backend initializes a connection to Endee using a dedicated client wrapper.
+The backend uses a dedicated client wrapper with safe index handling.
 
-backend/endee_client.py
-from endee import Endee, Precision
-from endee.exceptions import ConflictException, NotFoundException
-from backend.config import INDEX_NAME, EMBEDDING_DIM
-
-ENDEE_URL = "http://localhost:8080"
-
-def get_index():
-    client = Endee(base_url=ENDEE_URL)
-
-    try:
-        client.create_index(
-            name=INDEX_NAME,
-            dimension=EMBEDDING_DIM,
-            space_type="cosine",
-            precision=Precision.INT8D
-        )
-    except ConflictException:
-        pass
-
-    try:
-        return client.get_index(INDEX_NAME)
-    except NotFoundException:
-        client.delete_index(INDEX_NAME)
-        client.create_index(
-            name=INDEX_NAME,
-            dimension=EMBEDDING_DIM,
-            space_type="cosine",
-            precision=Precision.INT8D
-        )
-        return client.get_index(INDEX_NAME)
-
-
-This logic ensures:
+This ensures:
 
 idempotent index creation
 
-safe recovery after container restarts
+automatic recovery after restarts
 
-no manual intervention required
+no manual index management
 
-4️⃣ Installing Application Dependencies
-
-All Python dependencies are listed in requirements.txt.
-
+4️⃣ Install Application Dependencies
 pip install -r requirements.txt
 
 
-Key dependencies include:
+Key dependencies:
 
-sentence-transformers (embeddings)
+sentence-transformers
 
-streamlit (UI)
+streamlit
 
-pypdf (PDF parsing)
+pypdf
 
-requests (networking)
+requests
 
-endee (vector DB SDK)
+endee
 
-5️⃣ Installing and Running Ollama (Local LLM)
+5️⃣ Install & Run Ollama (Local LLM)
 
-Ollama is used to run a local language model for the RAG pipeline.
-
-5.1 Install Ollama
-
-Download from:
+Install Ollama from:
 
 https://ollama.com
 
-5.2 Start Ollama Service
+
+Start the service:
+
 ollama serve
 
-5.3 Pull a Model
+
+Pull a model:
+
 ollama pull mistral
 
 
@@ -275,22 +316,17 @@ fast CPU inference
 
 low memory usage
 
-suitability for demo environments
+demo-friendly performance
 
-6️⃣ Running the Application
-
-Once Endee and Ollama are running, start the application:
-
+6️⃣ Run the Application
 streamlit run app.py
 
 
-The UI will be available at:
+Access the UI at:
 
 http://localhost:8501
 
-7️⃣ Execution Order Summary
-
-The correct startup sequence is:
+▶️ Execution Order Summary
 
 Start Endee (Docker)
 
@@ -300,18 +336,16 @@ Install Python dependencies
 
 Start Ollama
 
-Run the Streamlit application
+Run the Streamlit app
 
 Endee must always be running before the application starts.
 
 🔑 Key Design Choice
 
-Endee is intentionally started as a separate service rather than embedded into the application.
-
-This mirrors real-world deployments where:
+Endee is intentionally deployed as a separate service, mirroring real-world production systems where:
 
 vector databases run independently
 
 application services scale separately
 
-retrieval remains reliable even if the UI restarts
+retrieval remains stable across restarts
