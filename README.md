@@ -35,6 +35,7 @@ In modern AI systems, Endee acts as the **semantic memory layer**, enabling appl
 - agentic AI workflows  
 
 In this project, Endee serves as the **single source of semantic truth**.
+<img width="1905" height="463" alt="image" src="https://github.com/user-attachments/assets/7658824d-c82b-427c-9d61-7263fedaa291" />
 
 ---
 
@@ -150,6 +151,7 @@ User Question
   → Local LLM (Ollama)
   → Final Answer + Citations + Confidence
 ```
+<img width="1003" height="820" alt="image" src="https://github.com/user-attachments/assets/58644290-0744-40ab-b605-5c5ee37e7aba" />
 
 ### Key Constraint
 
