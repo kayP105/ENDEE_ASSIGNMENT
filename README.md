@@ -120,6 +120,7 @@ User Query
   → Top-K Similar Vectors
   → Original Text + Metadata + Confidence
 ```
+<img width="1010" height="1018" alt="image" src="https://github.com/user-attachments/assets/a3983184-6703-4056-918c-8fdd14781c70" />
 
 ### Characteristics
 
