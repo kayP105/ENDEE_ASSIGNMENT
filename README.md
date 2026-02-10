@@ -172,6 +172,10 @@ PDF / TXT Document
   → Endee Vector Index
 ```
 
+
+https://github.com/user-attachments/assets/cd9b5a59-29c9-400c-ba60-95c8a54ebb0c
+
+
 Each stored chunk includes metadata such as:
 - source file
 - page number
