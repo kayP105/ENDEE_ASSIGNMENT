@@ -20,7 +20,7 @@ A key design principle of this project is that **the language model is used only
 
 **Endee** is a **high-performance, open-source vector database** designed specifically for **semantic similarity search at scale**.
 
-Unlike traditional databases that store and query structured data (rows, columns, exact matches), Endee is optimized to:
+Unlike traditional databases that store and query structured data, Endee is optimized to:
 
 - store high-dimensional vector embeddings  
 - perform approximate nearest-neighbor (ANN) search  
@@ -33,7 +33,7 @@ In modern AI systems, Endee acts as the enables applications such as:
 - recommendation systems  
 - retrieval-augmented generation (RAG)  
 - agentic AI workflows
-- 
+  
 <img width="1905" height="463" alt="image" src="https://github.com/user-attachments/assets/7658824d-c82b-427c-9d61-7263fedaa291" />
 
 ---
