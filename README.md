@@ -264,10 +264,9 @@ from endee import Endee, Precision
 from endee.exceptions import ConflictException, NotFoundException
 from backend.config import INDEX_NAME, EMBEDDING_DIM
 
-ENDEE_URL = "http://localhost:8080"
 
 def get_index():
-    client = Endee(base_url=ENDEE_URL)
+    client = Endee()
     try:
         client.create_index(
             name=INDEX_NAME,
