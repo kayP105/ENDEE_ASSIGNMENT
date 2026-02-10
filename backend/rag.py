@@ -2,11 +2,6 @@ import subprocess
 
 
 def generate_answer(question, contexts):
-    """
-    Generate a grounded answer using a local Ollama LLM.
-    Windows-safe UTF-8 handling.
-    """
-
     MAX_CHARS = 800
 
     context_text = "\n\n".join(
@@ -29,8 +24,6 @@ Question:
 
 Answer:
 """
-
-    # 🔑 Encode prompt as UTF-8 bytes
     prompt_bytes = prompt.encode("utf-8")
 
     result = subprocess.run(
@@ -39,7 +32,5 @@ Answer:
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
-
-    # 🔑 Decode output safely
     return result.stdout.decode("utf-8", errors="ignore").strip()
 

@@ -3,18 +3,10 @@ from pypdf import PdfReader
 from backend.embeddings import Embedder
 from backend.endee_client import get_index
 
-
-# --------- CONFIG ---------
-CHUNK_SIZE = 400      # words per chunk
-CHUNK_OVERLAP = 50    # overlapping words
-# --------------------------
-
+CHUNK_SIZE = 400   
+CHUNK_OVERLAP = 50    
 
 def extract_chunks_from_pdf(path):
-    """
-    Extracts text from a PDF page by page and returns
-    deduplicated, overlapping chunks with page numbers.
-    """
     reader = PdfReader(path)
     chunks = []
 
@@ -38,7 +30,6 @@ def extract_chunks_from_pdf(path):
 
             i += CHUNK_SIZE - CHUNK_OVERLAP
 
-    # -------- Deduplication --------
     seen = set()
     unique_chunks = []
 

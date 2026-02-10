@@ -42,6 +42,7 @@ if st.button("Run"):
         for r in results:
             meta = r["meta"]
             st.markdown(f"""
+**Confidence:** {r["confidence"]}% 
 **Source:** `{meta['source']}`  
 **Page:** {meta['page']}
 

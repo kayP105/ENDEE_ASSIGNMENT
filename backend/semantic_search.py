@@ -11,8 +11,6 @@ def semantic_search(query, top_k=5):
     processed = []
     for r in results:
         score = r.get("similarity", 0)
-
-        # Convert similarity → confidence %
         confidence = round(score * 100, 2)
 
         processed.append({
