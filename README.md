@@ -65,15 +65,25 @@ Original Text + Metadata                                                Prompt C
 
 
 ┌─────────────────────┐
+
 │  User Interface     │
+
 │  (Streamlit)        │
+
 └─────────┬───────────┘
+
           ↓
+          
 ┌─────────────────────┐
+
 │  Application Layer  │
+
 │  (Python Backend)   │
+
 └─────────┬───────────┘
+
           ↓
+          
 ┌─────────────────────┐
 │  Semantic Layer     │
 │  (Embeddings)       │
